@@ -22,8 +22,9 @@ fi
 rm -f zfs
 
 # base
-ls -l /
 echo $PWD
+ls $PWD
+ls files/
 emerge-gitclone
 echo 'FEATURES="-network-sandbox -pid-sandbox -ipc-sandbox -usersandbox -sandbox"' >>/etc/portage/make.conf
 
