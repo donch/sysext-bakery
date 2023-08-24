@@ -4,7 +4,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    container:  mediadepot/flatcar-developer:3510.2.6
+    container:  mediadepot/flatcar-developer:${{ matrix.flatcarversion }}
+    strategy:
+      max-parallel: 6
+      matrix:
+        flatcarversion: ["3510.2.5", "3510.2.6"]
     permissions:
       # allow the action to create a release
       contents: write
