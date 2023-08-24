@@ -35,9 +35,9 @@ jobs:
 
           sha256sum *.raw > SHA256SUMS
       # create a Github release with the generated artifacts
-      #- name: release
-      #  uses: softprops/action-gh-release@v1
-      #  with:
-      #    files: |
-      #      SHA256SUMS
-      #      *.raw
+      - name: release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            SHA256SUMS
+            *.raw
