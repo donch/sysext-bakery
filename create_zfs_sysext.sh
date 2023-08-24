@@ -29,8 +29,8 @@ cp files/zfs/repos.conf /etc/portage/repos.conf/zfs.conf
 cp -r files/zfs/${FLATCARVERSION}/overlay/ /var/lib/portage/zfs-overlay/
 
 # build zfs
-kernel=$(ls /lib/modules) && KBUILD_OUTPUT=/lib/modules/${kernel}/build KERNEL_DIR=/lib/modules/${kernel}/source emerge -j16 --getbinpkg --onlydeps zfs
-emerge -j16 --getbinpkg --buildpkgonly zfs squashfs-tools
+kernel=$(ls /lib/modules) && KBUILD_OUTPUT=/lib/modules/${kernel}/build KERNEL_DIR=/lib/modules/${kernel}/source emerge -j2 --getbinpkg --onlydeps zfs
+emerge -j2 --getbinpkg --buildpkgonly zfs squashfs-tools
 cat /lib/modules/5.15.122-flatcar/modules.dep
 
 # install deps 
