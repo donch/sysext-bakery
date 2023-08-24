@@ -1,12 +1,9 @@
 name: Build and release Systemd sysext images
 on:
-  push:
-    tags:
-      - '*'
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: mediadepot/flatcar-developer:3510.2.6
     permissions:
       # allow the action to create a release
       contents: write
@@ -18,17 +15,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          sudo apt update -qq && sudo apt install -yqq \
-            curl \
-            jq \
-            squashfs-tools \
-            xz-utils
-
           images=(
-              "kubernetes-v1.27.4"
-              "docker-24.0.5"
-              "docker_compose-2.17.2"
-              "wasmtime-11.0.1"
+              "zfs-2.1.11"
           )
 
           for image in ${images[@]}; do
@@ -40,9 +28,9 @@ jobs:
 
           sha256sum *.raw > SHA256SUMS
       # create a Github release with the generated artifacts
-      - name: release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            SHA256SUMS
-            *.raw
+      #- name: release
+      #  uses: softprops/action-gh-release@v1
+      #  with:
+      #    files: |
+      #      SHA256SUMS
+      #      *.raw
