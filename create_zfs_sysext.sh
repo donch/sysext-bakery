@@ -22,11 +22,13 @@ fi
 rm -f zfs
 
 # base
-echo $PWD
-ls $PWD
-ls files/
 emerge-gitclone
 echo 'FEATURES="-network-sandbox -pid-sandbox -ipc-sandbox -usersandbox -sandbox"' >>/etc/portage/make.conf
+cp files/zfs/repos.conf /etc/portage/repos.conf/zfs.conf
+cp -r files/zfs/overlay/ /var/lib/portage/zfs-overlay/
+kernel=$(ls /lib/modules) && KBUILD_OUTPUT=/lib/modules/${kernel}/build KERNEL_DIR=/lib/modules/${kernel}/source emerge -j16 --getbinpkg --onlydeps zfs
+emerge -j16 --getbinpkg --buildpkgonly zfs squashfs-tools
+cat /lib/modules/5.15.122-flatcar/modules.dep
 
 
 
