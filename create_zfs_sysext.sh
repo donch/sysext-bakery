@@ -27,9 +27,28 @@ emerge-gitclone
 echo 'FEATURES="-network-sandbox -pid-sandbox -ipc-sandbox -usersandbox -sandbox"' >>/etc/portage/make.conf
 cp files/zfs/repos.conf /etc/portage/repos.conf/zfs.conf
 cp -r files/zfs/${FLATCARVERSION}/overlay/ /var/lib/portage/zfs-overlay/
+
+# build zfs
 kernel=$(ls /lib/modules) && KBUILD_OUTPUT=/lib/modules/${kernel}/build KERNEL_DIR=/lib/modules/${kernel}/source emerge -j16 --getbinpkg --onlydeps zfs
 emerge -j16 --getbinpkg --buildpkgonly zfs squashfs-tools
 cat /lib/modules/5.15.122-flatcar/modules.dep
+
+# install deps 
+emerge --getbinpkg --usepkg squashfs-tools
+
+# flatcar layout compat
+mkdir -p /work ; for dir in lib lib64 bin sbin; do mkdir -p /work/usr/$dir; ln -s usr/$dir /work/$dir; done
+cp -r /lib/modules/${kernel} /work/lib/modules/${kernel}
+pkgs=$(emerge 2>/dev/null --usepkgonly --pretend zfs| awk -F'] ' '/binary/{ print $ 2 }' | awk '{ print "="$1 }'); emerge --usepkgonly --root=/work --nodeps $pkgs
+mkdir -p /work/usr/lib/extension-release.d && echo -e 'ID=flatcar\nSYSEXT_LEVEL=1.0' >/work/usr/lib/extension-release.d/extension-release.zfs
+mkdir -p /work/usr/src
+mv /work/etc /work/usr/etc
+cp -r files/zfs/usr/ /work/usr/
+rm -rf /work/var/db
+rm -rf /work/var/cache
+rm -rf /work/usr/share
+rm -rf /work/usr/src
+rm -rf /work/usr/include
 
 
 
