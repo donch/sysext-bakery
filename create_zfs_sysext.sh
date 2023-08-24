@@ -23,27 +23,37 @@ fi
 rm -f ${SYSEXTNAME}
 
 # base
+echo "Prepare base"
 emerge-gitclone
 echo 'FEATURES="-network-sandbox -pid-sandbox -ipc-sandbox -usersandbox -sandbox"' >>/etc/portage/make.conf
 cp files/zfs/repos.conf /etc/portage/repos.conf/zfs.conf
 cp -r files/zfs/${FLATCARVERSION}/overlay/ /var/lib/portage/zfs-overlay/
 
 # build zfs
+echo "Build ZFS"
 kernel=$(ls /lib/modules) && KBUILD_OUTPUT=/lib/modules/${kernel}/build KERNEL_DIR=/lib/modules/${kernel}/source emerge -j2 --getbinpkg --onlydeps zfs
 emerge -j2 --getbinpkg --buildpkgonly zfs squashfs-tools
-cat /lib/modules/5.15.122-flatcar/modules.dep
 
 # install deps 
+echo "Install deps"
 emerge --getbinpkg --usepkg squashfs-tools
 
 # flatcar layout compat
+echo "Create Flatcar layout"
 mkdir -p ${SYSEXTNAME} ; for dir in lib lib64 bin sbin; do mkdir -p ${SYSEXTNAME}/usr/$dir; ln -s usr/$dir ${SYSEXTNAME}/$dir; done
+echo "Copy kernel modules to workdir"
+mkdir -p ${SYSEXTNAME}/lib/modules
 cp -r /lib/modules/${kernel} ${SYSEXTNAME}/lib/modules/${kernel}
+echo "Emerge packages"
 pkgs=$(emerge 2>/dev/null --usepkgonly --pretend zfs| awk -F'] ' '/binary/{ print $ 2 }' | awk '{ print "="$1 }'); emerge --usepkgonly --root=${SYSEXTNAME} --nodeps $pkgs
+echo "Create sysext metadata file"
 mkdir -p ${SYSEXTNAME}/usr/lib/extension-release.d && echo -e 'ID=flatcar\nSYSEXT_LEVEL=1.0' >${SYSEXTNAME}/usr/lib/extension-release.d/extension-release.zfs
-mkdir -p ${SYSEXTNAME}/usr/src
 mv ${SYSEXTNAME}/etc ${SYSEXTNAME}/usr/etc
+echo "Copy static files (systemd) to workdir"
 cp -r files/zfs/usr/ ${SYSEXTNAME}/usr/
+
+# clean uneeded files 
+echo "Cleaning"
 rm -rf ${SYSEXTNAME}/var/db
 rm -rf ${SYSEXTNAME}/var/cache
 rm -rf ${SYSEXTNAME}/usr/share
