@@ -20,7 +20,7 @@ FLATCARVERSION="$3"
 if [ "${ARCH}" = aarch64 ]; then
   ARCH=arm64
 fi
-rm -f zfs
+rm -f ${SYSEXTNAME}
 
 # base
 emerge-gitclone
@@ -38,17 +38,17 @@ emerge --getbinpkg --usepkg squashfs-tools
 
 # flatcar layout compat
 mkdir -p /work ; for dir in lib lib64 bin sbin; do mkdir -p /work/usr/$dir; ln -s usr/$dir /work/$dir; done
-cp -r /lib/modules/${kernel} /work/lib/modules/${kernel}
-pkgs=$(emerge 2>/dev/null --usepkgonly --pretend zfs| awk -F'] ' '/binary/{ print $ 2 }' | awk '{ print "="$1 }'); emerge --usepkgonly --root=/work --nodeps $pkgs
-mkdir -p /work/usr/lib/extension-release.d && echo -e 'ID=flatcar\nSYSEXT_LEVEL=1.0' >/work/usr/lib/extension-release.d/extension-release.zfs
-mkdir -p /work/usr/src
-mv /work/etc /work/usr/etc
-cp -r files/zfs/usr/ /work/usr/
-rm -rf /work/var/db
-rm -rf /work/var/cache
-rm -rf /work/usr/share
-rm -rf /work/usr/src
-rm -rf /work/usr/include
+cp -r /lib/modules/${kernel} ${SYSEXTNAME}/lib/modules/${kernel}
+pkgs=$(emerge 2>/dev/null --usepkgonly --pretend zfs| awk -F'] ' '/binary/{ print $ 2 }' | awk '{ print "="$1 }'); emerge --usepkgonly --root=${SYSEXTNAME} --nodeps $pkgs
+mkdir -p ${SYSEXTNAME}/usr/lib/extension-release.d && echo -e 'ID=flatcar\nSYSEXT_LEVEL=1.0' >${SYSEXTNAME}/usr/lib/extension-release.d/extension-release.zfs
+mkdir -p ${SYSEXTNAME}/usr/src
+mv ${SYSEXTNAME}/etc ${SYSEXTNAME}/usr/etc
+cp -r files/zfs/usr/ ${SYSEXTNAME}/usr/
+rm -rf ${SYSEXTNAME}/var/db
+rm -rf ${SYSEXTNAME}/var/cache
+rm -rf ${SYSEXTNAME}/usr/share
+rm -rf ${SYSEXTNAME}/usr/src
+rm -rf ${SYSEXTNAME}/usr/include
 
 
 
