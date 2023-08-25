@@ -25,11 +25,21 @@ jobs:
           )
 
           for image in ${images[@]}; do
-              component="${image%%-*}"
-              flatcarversion="${image##*-}"
-              temp="${image#*-}"
-              version="${temp%-*}"
-              "./create_${component}_sysext.sh" "${version}" "${component}" "${flatcarversion}"
+              IFS="-" read -ra parts <<< "$image"
+              component="${parts[0]}"
+              version="${parts[1]}"
+
+              if [ "${#parts[@]}" -eq 3 ]; then
+                 flatcarversion="${parts[2]}"
+              else
+                 flatcarversion=""
+              fi
+ 
+              if [ -n "$flatcarversion" ]; then
+                 "./create_${component}_sysext.sh" "${version}" "${component}" "${flatcarversion}"
+              else
+                 "./create_${component}_sysext.sh" "${version}" "${component}"
+              fi
               mv "${component}.raw" "${image}.raw"
           done
 
