@@ -43,7 +43,7 @@ echo "========== Create Flatcar layout"
 mkdir -p ${SYSEXTNAME} ; for dir in lib lib64 bin sbin; do mkdir -p ${SYSEXTNAME}/usr/$dir; ln -s usr/$dir ${SYSEXTNAME}/$dir; done
 echo "========== Copy kernel modules to workdir"
 mkdir -p ${SYSEXTNAME}/lib/modules
-rsync -a /lib/modules/${kernel} ${SYSEXTNAME}/lib/modules/${kernel}
+rsync -a /lib/modules/${kernel} ${SYSEXTNAME}/lib/modules/
 echo "========== Emerge packages"
 pkgs=$(emerge 2>/dev/null --usepkgonly --pretend zfs| awk -F'] ' '/binary/{ print $ 2 }' | awk '{ print "="$1 }'); emerge --usepkgonly --root=${SYSEXTNAME} --nodeps $pkgs
 echo "========== Create sysext metadata file"
