@@ -22,6 +22,7 @@ jobs:
 
           images=(
               "zfs-2.1.11-${{ matrix.flatcarversion }}"
+              "teleport-9.3.26"
           )
 
           for image in ${images[@]}; do
