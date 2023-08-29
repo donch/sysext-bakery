@@ -4,10 +4,11 @@ set -euo pipefail
 OS="${OS-flatcar}"
 FORMAT="${FORMAT:-squashfs}"
 ARCH="${ARCH-}"
+FLATCARVERSION="${2-}"
 
 # This script is to be called as helper by other scripts but can also be used standalone
 if [ $# -lt 1 ]; then
-  echo "Usage: $0 SYSEXTNAME"
+  echo "Usage: $0 SYSEXTNAME (FLATCARVERSION)"
   echo "The script will make a SYSEXTNAME.raw image of the folder SYSEXTNAME, and create an os-release file in it, run with --help for the list of supported environment variables."
   exit 1
 elif [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
@@ -20,7 +21,6 @@ elif [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 fi
 
 SYSEXTNAME="$1"
-FLATCARVERSION="$2"
 
 if [ "${FORMAT}" != "squashfs" ] && [ "${FORMAT}" != "btrfs" ] && [ "${FORMAT}" != "ext4" ] && [ "${FORMAT}" != "ext2" ]; then
   echo "Expected FORMAT=squashfs, FORMAT=btrfs, FORMAT=ext4, or FORMAT=ext2, got '${FORMAT}'" >&2
