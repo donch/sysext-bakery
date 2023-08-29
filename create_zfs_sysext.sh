@@ -47,7 +47,7 @@ rsync -a /lib/modules/${kernel} ${SYSEXTNAME}/lib/modules/
 echo "========== Emerge packages"
 pkgs=$(emerge 2>/dev/null --usepkgonly --pretend zfs| awk -F'] ' '/binary/{ print $ 2 }' | awk '{ print "="$1 }'); emerge --usepkgonly --root=${SYSEXTNAME} --nodeps $pkgs
 echo "========== Create sysext metadata file"
-mkdir -p ${SYSEXTNAME}/usr/lib/extension-release.d && echo -e "ID=flatcar\nSYSEXT_LEVEL=1.0\VERSION_ID=${FLATCARVERSION}" >${SYSEXTNAME}/usr/lib/extension-release.d/extension-release.zfs
+mkdir -p ${SYSEXTNAME}/usr/lib/extension-release.d && echo -e "ID=flatcar\nSYSEXT_LEVEL=1.0\nVERSION_ID=${FLATCARVERSION}" >${SYSEXTNAME}/usr/lib/extension-release.d/extension-release.zfs
 mv ${SYSEXTNAME}/etc ${SYSEXTNAME}/usr/etc
 echo "========== Copy static files (systemd) to workdir"
 rsync -a files/zfs/usr/ ${SYSEXTNAME}/usr/
