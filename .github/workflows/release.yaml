@@ -17,7 +17,8 @@ jobs:
           set -euo pipefail
 
           images=(
-              "teleport-9.3.26"
+              "teleport-10.3.16"
+              "teleport-11.3.22"
           )
 
           for image in ${images[@]}; do
@@ -28,13 +29,36 @@ jobs:
           done
 
           sha256sum *.raw > SHA256SUMS
+      - name: Get git tag
+        id: tag
+        uses: devops-actions/action-get-tag@v1.0.2
+
+      - name: (Pre)Release check
+        run: |
+          if [[ ${{ steps.tag.outputs.tag }} =~ ^[0-9]+$ ]]; then
+             echo "TAG_TYPE=numeric" >> $GITHUB_ENV
+          else
+             echo "TAG_TYPE=alphanumeric" >> $GITHUB_ENV
+          fi
+
       # create a Github release with the generated artifacts
       - name: Release
         uses: softprops/action-gh-release@v1
+        if: env.TAG_TYPE == 'numeric'
         with:
           files: |
             SHA256SUMS
             *.raw
+      - name: Draft Release
+        uses: softprops/action-gh-release@v1
+        if: env.TAG_TYPE == 'alphanumeric'
+        with:
+          prerelease: true
+          draft: true
+          files: |
+            SHA256SUMS
+            *.raw
+
   multi-build:
     name: Multi version build
     runs-on: ubuntu-22.04
@@ -42,7 +66,7 @@ jobs:
     strategy:
       max-parallel: 6
       matrix:
-        flatcarversion: ["3510.2.6", "3510.2.5"]
+        flatcarversion: ["3510.2.6", "3510.2.7"]
     permissions:
       # allow the action to create a release
       contents: write
@@ -68,10 +92,32 @@ jobs:
           done
 
           sha256sum *.raw > SHA256SUMS
+      - name: Get git tag
+        id: tag
+        uses: devops-actions/action-get-tag@v1.0.2
+
+      - name: (Pre)Release check
+        run: |
+          if [[ ${{ steps.tag.outputs.tag }} =~ ^[0-9]+$ ]]; then
+             echo "TAG_TYPE=numeric" >> $GITHUB_ENV
+          else
+             echo "TAG_TYPE=alphanumeric" >> $GITHUB_ENV
+          fi
+
       # create a Github release with the generated artifacts
       - name: Release
         uses: softprops/action-gh-release@v1
+        if: env.TAG_TYPE == 'numeric'
         with:
+          files: |
+            SHA256SUMS
+            *.raw
+      - name: Draft Release
+        uses: softprops/action-gh-release@v1
+        if: env.TAG_TYPE == 'alphanumeric'
+        with:
+          prerelease: true
+          draft: true
           files: |
             SHA256SUMS
             *.raw
