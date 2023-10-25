@@ -65,7 +65,7 @@ jobs:
     strategy:
       max-parallel: 6
       matrix:
-        flatcarversion: ["3510.2.8", "3602.2.0"]
+        flatcarversion: ["3510.2.8", "3602.2.1"]
     permissions:
       # allow the action to create a release
       contents: write
@@ -78,7 +78,7 @@ jobs:
           set -euo pipefail
 
           images=(
-              "zfs-2.1.11-${{ matrix.flatcarversion }}"
+              "zfs-2.1.12-${{ matrix.flatcarversion }}"
           )
 
           for image in ${images[@]}; do
