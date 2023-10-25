@@ -78,7 +78,7 @@ jobs:
           set -euo pipefail
 
           images=(
-              "zfs-2.2.0-${{ matrix.flatcarversion }}"
+              "zfs-2.1.13-${{ matrix.flatcarversion }}"
           )
 
           for image in ${images[@]}; do
