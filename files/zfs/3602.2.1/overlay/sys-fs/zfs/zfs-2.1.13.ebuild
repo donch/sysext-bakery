@@ -4,7 +4,8 @@
 EAPI=8
 
 DISTUTILS_OPTIONAL=1
-PYTHON_COMPAT=( python3_{9..11} )
+DISTUTILS_USE_PEP517=setuptools
+PYTHON_COMPAT=( python3_{10..11} )
 
 inherit autotools bash-completion-r1 dist-kernel-utils distutils-r1 flag-o-matic linux-info pam systemd udev usr-ldscript
 
@@ -44,7 +45,7 @@ DEPEND="
 	!minimal? ( ${PYTHON_DEPS} )
 	pam? ( sys-libs/pam )
 	python? (
-		virtual/python-cffi[${PYTHON_USEDEP}]
+		$(python_gen_cond_dep 'dev-python/cffi[${PYTHON_USEDEP}]' 'python*')
 	)
 "
 
@@ -52,7 +53,7 @@ BDEPEND="app-alternatives/awk
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )
 	python? (
-		dev-python/setuptools[${PYTHON_USEDEP}]
+		${DISTUTILS_DEPS}
 		|| (
 			dev-python/packaging[${PYTHON_USEDEP}]
 			dev-python/distlib[${PYTHON_USEDEP}]
@@ -163,15 +164,6 @@ libsoversion_check() {
 	fi
 }
 
-src_unpack() {
-	if use verify-sig ; then
-		# Needed for downloaded patch (which is unsigned, which is fine)
-		verify-sig_verify_detached "${DISTDIR}"/${MY_P}.tar.gz{,.asc}
-	fi
-
-	default
-}
-
 src_prepare() {
 	default
 	libsoversion_check
@@ -225,6 +217,9 @@ src_configure() {
 		# Building zfs-mount-generator.c on musl breaks as strndupa
 		# isn't available. But systemd doesn't support musl anyway, so
 		# just disable building it.
+		# UPDATE: it has been fixed since,
+		# https://github.com/openzfs/zfs/commit/1f19826c9ac85835cbde61a7439d9d1fefe43a4a
+		# but we still leave it as this for now.
 		$(use_enable !elibc_musl systemd)
 		$(use_enable debug)
 		$(use_enable nls)
@@ -313,8 +308,4 @@ pkg_postinst() {
 
 pkg_postrm() {
 	udev_reload
-
-	if ! use kernel-builtin && [[ ${PV} == "9999" ]]; then
-		remove_moduledb
-	fi
 }

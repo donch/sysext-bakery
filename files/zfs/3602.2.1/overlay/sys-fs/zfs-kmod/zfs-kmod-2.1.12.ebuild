@@ -135,7 +135,6 @@ src_configure() {
 		TEST_JOBS="$(makeopts_jobs)"
 	)
 
-	unset am_cv_python_version
 	econf "${myconf[@]}"
 }
 

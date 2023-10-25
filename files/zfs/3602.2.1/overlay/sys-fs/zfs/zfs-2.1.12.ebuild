@@ -13,7 +13,7 @@ DESCRIPTION="Userland utilities for ZFS Linux kernel module"
 HOMEPAGE="https://github.com/openzfs/zfs"
 
 if [[ ${PV} == "9999" ]]; then
-	inherit git-r3 linux-mod
+	inherit git-r3
 	EGIT_REPO_URI="https://github.com/openzfs/zfs.git"
 else
 	VERIFY_SIG_OPENPGP_KEY_PATH=${BROOT}/usr/share/openpgp-keys/openzfs.asc
@@ -229,7 +229,6 @@ src_configure() {
 		$(usex minimal --without-python --with-python="${EPYTHON}")
 	)
 
-	unset am_cv_python_version
 	econf "${myconf[@]}"
 }
 
