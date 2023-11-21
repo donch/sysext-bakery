@@ -8,6 +8,10 @@ jobs:
     permissions:
       # allow the action to create a release
       contents: write
+    strategy:
+      max-parallel: 6
+      matrix:
+        version: ["10.3.16", "11.3.22"]
     steps:
       # checkout the sources
       - uses: actions/checkout@v3
@@ -17,8 +21,7 @@ jobs:
           set -euo pipefail
 
           images=(
-              "teleport-10.3.16"
-              "teleport-11.3.22"
+              "teleport-${{ matrix.version }}"
           )
 
           for image in ${images[@]}; do
