@@ -19,6 +19,7 @@ jobs:
           images=(
               "teleport-10.3.16"
               "teleport-11.3.22"
+              "teleport-14.1.5"
           )
 
           for image in ${images[@]}; do
