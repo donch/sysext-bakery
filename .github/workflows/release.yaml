@@ -11,7 +11,7 @@ jobs:
     strategy:
       max-parallel: 6
       matrix:
-        version: ["10.3.16", "11.3.22"]
+        version: ["10.3.16", "14.1.5"]
     steps:
       # checkout the sources
       - uses: actions/checkout@v3
