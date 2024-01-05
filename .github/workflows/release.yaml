@@ -58,6 +58,8 @@ jobs:
 
           echo ${{ steps.get_release.outputs.html_url }}
           echo ${{ steps.get_release.outputs.name }}
+          DL_URL=`echo ${{ steps.get_release.outputs.html_url }} | sed s@/tag/@/downloads/@`
+          echo $DL_URL
           #curl -fsSLO https://github.com/donch/sysext-bakery/releases/download/latest/SHA256SUMS
           sha256sum *.raw > SHA256SUMS
 
