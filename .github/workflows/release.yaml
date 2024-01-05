@@ -30,7 +30,8 @@ jobs:
              echo "TAG_TYPE=alphanumeric" >> $GITHUB_ENV
              echo "DRAFT=${{ toJSON(true) }}" >> $GITHUB_ENV
           fi
-          echo $GITHUB_ENV
+          env
+          echo env.DRAFT
 
       - name: Get latest release
         continue-on-error: true
@@ -84,6 +85,7 @@ jobs:
             *.raw
 
   multi-build:
+    if: ${{ false }}
     name: Multi version build
     runs-on: ubuntu-22.04
     container:  mediadepot/flatcar-developer:${{ matrix.flatcarversion }}
