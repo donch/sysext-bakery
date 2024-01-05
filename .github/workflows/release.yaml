@@ -56,12 +56,10 @@ jobs:
               mv "${component}.raw" "${image}.raw"
           done
 
-          echo ${{ steps.get_release.outputs.html_url }}
-          echo ${{ steps.get_release.outputs.name }}
           DL_URL=`echo ${{ steps.get_release.outputs.html_url }} | sed s@/tag/@/downloads/@`
           echo $DL_URL
-          #curl -fsSLO https://github.com/donch/sysext-bakery/releases/download/latest/SHA256SUMS
-          sha256sum *.raw > SHA256SUMS
+          curl -fsSLO $DL_URL/SHA256SUMS
+          sha256sum *.raw >> SHA256SUMS
 
 
       # create a Github release with the generated artifacts
