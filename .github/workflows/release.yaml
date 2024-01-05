@@ -20,16 +20,13 @@ jobs:
         id: tag
         uses: devops-actions/action-get-tag@v1.0.2
 
-      - name: Get Current Release
+      - name: Get release
         continue-on-error: true
         id: get_release
-        uses: joutvhu/get-release@v1
-        with:
-          debug: true
-          tag_name: ${{ steps.tag.outputs.tag}}
+        uses: bruceadams/get-release@v1.3.2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+          GITHUB_TOKEN: ${{ github.token }}
+
       # build the images and generate a manifest
       - name: Build
         run: |
