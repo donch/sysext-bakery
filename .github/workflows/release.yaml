@@ -27,6 +27,7 @@ jobs:
         with:
           token: ${{ github.token }}
           tag_name: ${{ steps.tag.outputs.tag  }}
+          draft: true
 
 
       # build the images and generate a manifest
