@@ -31,7 +31,6 @@ jobs:
              echo "DRAFT=${{ toJSON(true) }}" >> $GITHUB_OUTPUT
           fi
 
-
       - name: Get latest release
         continue-on-error: true
         id: get_release
@@ -57,11 +56,8 @@ jobs:
               mv "${component}.raw" "${image}.raw"
           done
 
-          echo ${{ steps.get_release.outputs.upload_url  }}
           echo ${{ steps.get_release.outputs.html_url }}
-          echo ${{ steps.get_release.outputs.assets_url }}
-          echo ${{ steps.get_release.outputs.id }}
-          echo ${{ steps.get_release.outputs.url }}
+          echo ${{ steps.get_release.outputs.name }}
           #curl -fsSLO https://github.com/donch/sysext-bakery/releases/download/latest/SHA256SUMS
           sha256sum *.raw > SHA256SUMS
 
