@@ -9,7 +9,7 @@ jobs:
       # allow the action to create a release
       contents: write
     strategy:
-      max-parallel: 6
+      max-parallel: 1
       matrix:
         version: ["10.3.16", "11.3.22"]
     steps:
