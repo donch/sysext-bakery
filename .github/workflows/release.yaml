@@ -25,12 +25,11 @@ jobs:
         run: |
           if [[ ${{ steps.tag.outputs.tag }} =~ ^[0-9]+$ ]]; then
              echo "TAG_TYPE=numeric" >> $GITHUB_ENV
-             echo "DRAFT=${{ toJSON(false) }}" >> $GITHUB_ENV
+             echo "DRAFT=${{ toJSON('false') }}" >> $GITHUB_ENV
           else
              echo "TAG_TYPE=alphanumeric" >> $GITHUB_ENV
-             echo "DRAFT=${{ toJSON(true) }}" >> $GITHUB_ENV
+             echo "DRAFT=${{ toJSON('true') }}" >> $GITHUB_ENV
           fi
-          env
           echo env.DRAFT
 
       - name: Get latest release
