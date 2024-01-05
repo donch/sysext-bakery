@@ -30,6 +30,7 @@ jobs:
              echo "TAG_TYPE=alphanumeric" >> $GITHUB_ENV
              echo "DRAFT=${{ toJSON(true) }}" >> $GITHUB_ENV
           fi
+          echo $GITHUB_ENV
 
       - name: Get latest release
         continue-on-error: true
