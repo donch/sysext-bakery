@@ -57,7 +57,7 @@ jobs:
           done
 
           if [ ! -z "${{ steps.get_release.outputs.html_url }}" ]; then
-            DL_URL=`echo ${{ steps.get_release.outputs.html_url }} | sed s@/tag/@/downloads/@`
+            DL_URL=`echo ${{ steps.get_release.outputs.html_url }} | sed s@/tag/@/download/@`
             echo $DL_URL
             echo "${DL_URL}/SHA256SUMS"
             curl -fsSLO "$DL_URL/SHA256SUMS"
