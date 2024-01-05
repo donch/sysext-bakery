@@ -15,6 +15,20 @@ jobs:
     steps:
       # checkout the sources
       - uses: actions/checkout@v3
+
+      - name: Get git tag
+        id: tag
+        uses: devops-actions/action-get-tag@v1.0.2
+
+      - name: Get Current Release
+        id: get_current_release
+        uses: joutvhu/get-release@v1
+        with:
+          debug: true
+          tag_name: ${{ steps.tag.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # build the images and generate a manifest
       - name: Build
         run: |
@@ -31,10 +45,10 @@ jobs:
               mv "${component}.raw" "${image}.raw"
           done
 
-          sha256sum *.raw > SHA256SUMS
-      - name: Get git tag
-        id: tag
-        uses: devops-actions/action-get-tag@v1.0.2
+          echo ${{ steps.get_current_release.outputs.upload_url  }}
+          echo ${{ steps.get_current_release.outputs.html_url }}
+          #curl -fsSLO https://github.com/donch/sysext-bakery/releases/download/latest/SHA256SUMS
+          #sha256sum *.raw > SHA256SUMS
 
       - name: (Pre)Release check
         run: |
