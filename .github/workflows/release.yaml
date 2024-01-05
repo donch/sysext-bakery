@@ -20,6 +20,16 @@ jobs:
         id: tag
         uses: devops-actions/action-get-tag@v1.0.2
 
+      - name: Tag / Release checks
+        run: |
+          if [[ ${{ steps.tag.outputs.tag }} =~ ^[0-9]+$ ]]; then
+             echo "TAG_TYPE=numeric" >> $GITHUB_ENV
+             echo "DRAFT=false" >> $GITHUB_ENV
+          else
+             echo "TAG_TYPE=alphanumeric" >> $GITHUB_ENV
+             echo "DRAFT=true" >> $GITHUB_ENV
+          fi
+
       - name: Get latest release
         continue-on-error: true
         id: get_release
@@ -27,8 +37,7 @@ jobs:
         with:
           token: ${{ github.token }}
           tag_name: ${{ steps.tag.outputs.tag  }}
-          draft: true
-
+          draft: env.DRAFT
 
       # build the images and generate a manifest
       - name: Build
@@ -49,16 +58,11 @@ jobs:
           echo ${{ steps.get_release.outputs.upload_url  }}
           echo ${{ steps.get_release.outputs.html_url }}
           echo ${{ steps.get_release.outputs.assets_url }}
+          echo ${{ steps.get_release.outputs.id }}
+          echo ${{ steps.get_release.outputs.url }}
           #curl -fsSLO https://github.com/donch/sysext-bakery/releases/download/latest/SHA256SUMS
           sha256sum *.raw > SHA256SUMS
 
-      - name: (Pre)Release check
-        run: |
-          if [[ ${{ steps.tag.outputs.tag }} =~ ^[0-9]+$ ]]; then
-             echo "TAG_TYPE=numeric" >> $GITHUB_ENV
-          else
-             echo "TAG_TYPE=alphanumeric" >> $GITHUB_ENV
-          fi
 
       # create a Github release with the generated artifacts
       - name: Release
