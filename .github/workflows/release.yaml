@@ -37,8 +37,15 @@ jobs:
         uses: kaliber5/action-get-release@v1
         with:
           token: ${{ github.token }}
-          tag_name: ${{ steps.tag.outputs.tag  }}
+          tag_name: ${{ steps.tag.outputs.tag }}
           draft: ${{ fromJSON(steps.tagcheck.outputs.DRAFT) }}
+
+      - name: Get SHA256SUMS
+        continue-on-error: true
+        uses: robinraju/release-downloader@v1.8
+        with:
+          tag: ${{ steps.tag.outputs.tag }}
+          fileName: "SHA256SUMS"
 
       # build the images and generate a manifest
       - name: Build
