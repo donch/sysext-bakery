@@ -40,13 +40,6 @@ jobs:
           tag_name: ${{ steps.tag.outputs.tag }}
           draft: ${{ fromJSON(steps.tagcheck.outputs.DRAFT) }}
 
-      - name: Get SHA256SUMS
-        continue-on-error: true
-        uses: robinraju/release-downloader@v1.8
-        with:
-          tag: ${{ steps.tag.outputs.tag }}
-          fileName: "SHA256SUMS"
-
       - name: Asset download
         continue-on-error: true
         if: ${{ steps.get_release.outputs.id }}
@@ -72,15 +65,6 @@ jobs:
               mv "${component}.raw" "${image}.raw"
           done
 
-          ls 
-          cat SHA256SUMS
-          if [ ! -z "${{ steps.get_release.outputs.html_url }}" ]; then
-            DL_URL=`echo ${{ steps.get_release.outputs.html_url }} | sed s@/tag/@/download/@`
-            echo $DL_URL
-            echo "${DL_URL}/SHA256SUMS"
-            echo ${{ steps.get_release.outputs.id }}
-            curl -fsSLO "$DL_URL/SHA256SUMS"
-          fi
           sha256sum *.raw >> SHA256SUMS
 
 
