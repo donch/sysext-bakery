@@ -5,7 +5,6 @@ jobs:
   build:
     concurrency:
       group: ${{ github.ref }}
-      cancel-in-progress: true
     name: Build
     runs-on: ubuntu-22.04
     permissions:
@@ -91,7 +90,6 @@ jobs:
     name: Multi version build
     concurrency:
       group: ${{ github.ref }}
-      cancel-in-progress: true
     runs-on: ubuntu-22.04
     container:  mediadepot/flatcar-developer:${{ matrix.flatcarversion }}
     strategy:
