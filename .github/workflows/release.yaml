@@ -49,9 +49,10 @@ jobs:
 
       - name: Asset download
         continue-on-error: true
-        uses: dsaltares/fetch-gh-release-asset@master
+        if: ${{ steps.get_release.outputs.id }}
+        uses: dsaltares/fetch-gh-release-asset@v1.1.1
         with:
-         version:  ${{ steps.get_release.outputs.id }}
+         version: ${{ steps.get_release.outputs.id }}
          file: 'SHA256SUMS'
          token: ${{ secrets.GITHUB_TOKEN }}      
 
