@@ -153,6 +153,7 @@ jobs:
               mv "${component}.raw" "${image}.raw"
           done
 
+          ls -lrtah     
           sha256sum *.raw >> SHA256SUMS
           echo "----"
           cat SHA256SUMS
