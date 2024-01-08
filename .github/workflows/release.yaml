@@ -67,6 +67,7 @@ jobs:
             DL_URL=`echo ${{ steps.get_release.outputs.html_url }} | sed s@/tag/@/download/@`
             echo $DL_URL
             echo "${DL_URL}/SHA256SUMS"
+            echo ${{ steps.get_release.outputs.id }}
             curl -fsSLO "$DL_URL/SHA256SUMS"
           fi
           sha256sum *.raw >> SHA256SUMS
