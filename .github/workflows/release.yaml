@@ -71,8 +71,8 @@ jobs:
               mv "${component}.raw" "${image}.raw"
           done
 
-	  ls 
-	  cat SHA256SUMS
+          ls 
+          cat SHA256SUMS
           if [ ! -z "${{ steps.get_release.outputs.html_url }}" ]; then
             DL_URL=`echo ${{ steps.get_release.outputs.html_url }} | sed s@/tag/@/download/@`
             echo $DL_URL
