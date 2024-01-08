@@ -66,6 +66,8 @@ jobs:
           done
 
           sha256sum *.raw >> SHA256SUMS
+          echo "----"
+          cat SHA256SUMS
 
 
       # create a Github release with the generated artifacts
@@ -152,6 +154,8 @@ jobs:
           done
 
           sha256sum *.raw >> SHA256SUMS
+          echo "----"
+          cat SHA256SUMS
 
       # create a Github release with the generated artifacts
       - name: Release
