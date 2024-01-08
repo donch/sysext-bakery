@@ -3,6 +3,9 @@ on:
   workflow_dispatch:
 jobs:
   build:
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
     name: Build
     runs-on: ubuntu-22.04
     permissions:
@@ -65,11 +68,7 @@ jobs:
               mv "${component}.raw" "${image}.raw"
           done
 
-          ls -lrtah     
           sha256sum *.raw >> SHA256SUMS
-          echo "----"
-          cat SHA256SUMS
-
 
       # create a Github release with the generated artifacts
       - name: Release
@@ -90,6 +89,9 @@ jobs:
 
   multi-build:
     name: Multi version build
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-22.04
     container:  mediadepot/flatcar-developer:${{ matrix.flatcarversion }}
     strategy:
@@ -154,10 +156,7 @@ jobs:
               mv "${component}.raw" "${image}.raw"
           done
 
-          ls -lrtah     
           sha256sum *.raw >> SHA256SUMS
-          echo "----"
-          cat SHA256SUMS
 
       # create a Github release with the generated artifacts
       - name: Release
