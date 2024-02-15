@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
 jobs:
   build:
+    if: ${{ false }}  # disable for now
     concurrency:
       group: ${{ github.ref }}
     name: Build
@@ -93,7 +94,7 @@ jobs:
     runs-on: ubuntu-22.04
     container:  mediadepot/flatcar-developer:${{ matrix.flatcarversion }}
     strategy:
-      max-parallel: 6
+      max-parallel: 1
       matrix:
         flatcarversion: ["3760.2.0", "3815.2.0"]
     permissions:
