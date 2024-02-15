@@ -28,6 +28,8 @@ emerge-gitclone
 echo 'FEATURES="-network-sandbox -pid-sandbox -ipc-sandbox -usersandbox -sandbox"' >>/etc/portage/make.conf
 cp files/zfs/repos.conf /etc/portage/repos.conf/zfs.conf
 cp -r files/zfs/${FLATCARVERSION}/overlay/ /var/lib/portage/zfs-overlay/
+# fixme starting with  3760. Incorrect permission on some headers
+chmod -R +r /usr/lib/gcc/x86_64-cros-linux-gnu/
 
 # build zfs
 echo "========== Build ZFS"
