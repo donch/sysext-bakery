@@ -93,10 +93,10 @@ jobs:
       group: ${{ github.ref }}
     runs-on: ubuntu-22.04
     container:  mediadepot/flatcar-developer:${{ matrix.flatcarversion }}
-#    strategy:
-#      max-parallel: 1
-#      matrix:
-#        flatcarversion: ["3760.2.0", "3815.2.0"]
+    strategy:
+      max-parallel: 1
+      matrix:
+        flatcarversion: ["3760.2.0", "3815.2.0"]
     permissions:
       # allow the action to create a release
       contents: write
@@ -143,16 +143,13 @@ jobs:
           set -euo pipefail
 
           images=(
-              "zfs-2.2.2-3815.2.0"
-              "zfs-2.1.14-3760.2.0"
+              "zfs-${{ matrix.flatcarversion }}"
           )
 
           for image in ${images[@]}; do
               component="${image%%-*}"
-              flatcarversion="${image##*-}"
-              temp="${image#*-}"
-              version="${temp%-*}"
-              "./create_${component}_sysext.sh" "${version}" "${component}" "${flatcarversion}"
+              flatcarversion="${image#*-}"
+              "./create_${component}_sysext.sh" "${component}" "${flatcarversion}"
               mv "${component}.raw" "${image}.raw"
           done
 
