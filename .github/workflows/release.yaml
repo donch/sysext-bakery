@@ -93,10 +93,10 @@ jobs:
       group: ${{ github.ref }}
     runs-on: ubuntu-22.04
     container:  mediadepot/flatcar-developer:${{ matrix.flatcarversion }}
-    strategy:
-      max-parallel: 1
-      matrix:
-        flatcarversion: ["3760.2.0", "3815.2.0"]
+#    strategy:
+#      max-parallel: 1
+#      matrix:
+#        flatcarversion: ["3760.2.0", "3815.2.0"]
     permissions:
       # allow the action to create a release
       contents: write
