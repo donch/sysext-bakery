@@ -147,8 +147,8 @@ jobs:
           )
 
           for image in ${images[@]}; do
-              flatcarversion="${image%-*}"
-              component="${image#*-}"
+              component="${image%-*}"
+              flatcarversion="${image#*-}"
               "./create_${component}_sysext.sh" "${component}" "${flatcarversion}"
               baked_component=$(ls ${component}-*.raw)
               sysext_name="${baked_component%.raw}-${flatcarversion}.raw"
