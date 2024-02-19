@@ -4,7 +4,7 @@ set -euo pipefail
 export ARCH="${ARCH-amd64}"
 SCRIPTFOLDER="$(dirname "$(readlink -f "$0")")"
 
-if [ $# -lt 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "Usage: $0 SYSEXTNAME FLATCARVERSION"
   echo "The script will build ZFS modules and tooling and create a sysext squashfs image with the name SYSEXTNAME.raw in the current folder."
   echo "A temporary directory named SYSEXTNAME in the current folder will be created and deleted again."
@@ -14,9 +14,8 @@ if [ $# -lt 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   exit 1
 fi
 
-VERSION="$1"
-SYSEXTNAME="$2"
-FLATCARVERSION="$3"
+SYSEXTNAME="$1"
+FLATCARVERSION="$2"
 if [ "${ARCH}" = aarch64 ]; then
   ARCH=arm64
 fi
