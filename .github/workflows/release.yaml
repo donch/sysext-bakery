@@ -152,7 +152,7 @@ jobs:
               "./create_${component}_sysext.sh" "${component}" "${flatcarversion}"
               baked_component=$(ls ${component}-*.raw)
               sysext_name="${baked_component%.raw}-${flatcarversion}.raw"
-              mv "baked_component" "$sysext_name"
+              mv "$baked_component" "$sysext_name"
           done
           ls
           sha256sum *.raw >> SHA256SUMS
