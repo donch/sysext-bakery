@@ -32,7 +32,8 @@ cp -r files/zfs/${FLATCARVERSION}/overlay/ /var/lib/portage/zfs-overlay/
 chmod -R +r /usr/lib/gcc/x86_64-cros-linux-gnu/
 
 # build zfs
-echo "========== Build ZFS"
+VERSION=$(emerge --search sys-fs/zfs$  | grep "Latest version available" | awk '{print $NF}')
+echo "========== Build ZFS $VERSION"
 kernel=$(ls /lib/modules) && KBUILD_OUTPUT=/lib/modules/${kernel}/build KERNEL_DIR=/lib/modules/${kernel}/source emerge -j$(nproc) --getbinpkg --onlydeps zfs
 emerge -j$(nproc) --getbinpkg --buildpkgonly zfs squashfs-tools
 emerge --info zfs
@@ -64,4 +65,5 @@ rm -rf ${SYSEXTNAME}/usr/include
 
 
 "${SCRIPTFOLDER}"/bake.sh "${SYSEXTNAME}" "${FLATCARVERSION}"
+mv "${SYSEXTNAME}.raw" "${SYSEXTNAME}-${VERSION}.raw"
 rm -rf "${SYSEXTNAME}"

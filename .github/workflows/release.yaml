@@ -143,18 +143,18 @@ jobs:
           set -euo pipefail
 
           images=(
-              "zfs-2.2.2-${{ matrix.flatcarversion }}"
+              "zfs-${{ matrix.flatcarversion }}"
           )
 
           for image in ${images[@]}; do
-              component="${image%%-*}"
-              flatcarversion="${image##*-}"
-              temp="${image#*-}"
-              version="${temp%-*}"
-              "./create_${component}_sysext.sh" "${version}" "${component}" "${flatcarversion}"
-              mv "${component}.raw" "${image}.raw"
+              flatcarversion="${image%-*}"
+              component="${image#*-}"
+              "./create_${component}_sysext.sh" "${component}" "${flatcarversion}"
+              baked_component=$(ls ${component}-*.raw)
+              sysext_name="${baked_component%.raw}-${flatcarversion}.raw"
+              mv "baked_component" "$sysext_name"
           done
-
+          ls
           sha256sum *.raw >> SHA256SUMS
 
       # create a Github release with the generated artifacts
