@@ -4,7 +4,7 @@ set -euo pipefail
 export ARCH="${ARCH-amd64}"
 SCRIPTFOLDER="$(dirname "$(readlink -f "$0")")"
 
-if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+if [ $# -lt 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "Usage: $0 SYSEXTNAME FLATCARVERSION"
   echo "The script will build ZFS modules and tooling and create a sysext squashfs image with the name SYSEXTNAME.raw in the current folder."
   echo "A temporary directory named SYSEXTNAME in the current folder will be created and deleted again."
@@ -14,8 +14,9 @@ if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   exit 1
 fi
 
-SYSEXTNAME="$1"
-FLATCARVERSION="$2"
+VERSION="$1"
+SYSEXTNAME="$2"
+FLATCARVERSION="$3"
 if [ "${ARCH}" = aarch64 ]; then
   ARCH=arm64
 fi
@@ -34,6 +35,7 @@ chmod -R +r /usr/lib/gcc/x86_64-cros-linux-gnu/
 echo "========== Build ZFS"
 kernel=$(ls /lib/modules) && KBUILD_OUTPUT=/lib/modules/${kernel}/build KERNEL_DIR=/lib/modules/${kernel}/source emerge -j$(nproc) --getbinpkg --onlydeps zfs
 emerge -j$(nproc) --getbinpkg --buildpkgonly zfs squashfs-tools
+emerge --info zfs
 
 # install deps 
 echo "========== Install deps"
